@@ -29,6 +29,7 @@ public class EtherscanService {
         JSONArray transactions = jsonResponse.getJSONArray("result");
 
         List<BigDecimal> gasCostsInEth = new ArrayList<>();
+
         for (int i = 0; i < transactions.length(); i++) {
             JSONObject transaction = transactions.getJSONObject(i);
             BigInteger gasPrice = new BigInteger(transaction.getString("gasPrice"));
