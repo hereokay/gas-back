@@ -28,7 +28,6 @@ public class EtherscanServiceTest {
 
     @Test
     public void testGetGasCostSummary() {
-
         GasCostSummary gasCostSummary = etherscanService.getGasCostSummary("0xAEf30fEcf1792Eed810F5fab03c0eB584E83FB91");
 
         // 결과 출력
