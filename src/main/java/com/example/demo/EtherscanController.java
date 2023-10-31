@@ -30,5 +30,10 @@ public class EtherscanController {
     public ResponseEntity<GasCostSummary> getGasCostSummary(@RequestParam String address) {
         return ResponseEntity.ok(etherscanService.getGasCostSummary(address));
     }
+    @GetMapping("/gas-costs-in-eth-with-timestamp")
+    public ResponseEntity<List<GasCostWithTimestamp>> getGasCostsInEthWithTimestamp(@RequestParam String address) {
+        return ResponseEntity.ok(etherscanService.getGasCostsInEthWithTimestamp(address));
+    }
+
 
 }

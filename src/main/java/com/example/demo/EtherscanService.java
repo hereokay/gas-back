@@ -63,6 +63,32 @@ public class EtherscanService {
         int count = gasCostsInEth.size();
         return new GasCostSummary(totalCost, count);
     }
+
+    public List<GasCostWithTimestamp> getGasCostsInEthWithTimestamp(String address) {
+        ResponseEntity<String> response = getTransactionHistory(address);
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+        JSONArray transactions = jsonResponse.getJSONArray("result");
+
+        List<GasCostWithTimestamp> gasCostsInEthWithTimestamp = new ArrayList<>();
+
+        for (int i = 0; i < transactions.length(); i++) {
+            JSONObject transaction = transactions.getJSONObject(i);
+            BigInteger gasPrice = new BigInteger(transaction.getString("gasPrice"));
+            BigInteger gasUsed = new BigInteger(transaction.getString("gasUsed"));
+            BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
+            BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
+
+            // 트랜잭션의 timestamp 정보를 가져옵니다.
+            String timestamp = transaction.getString("timeStamp");
+
+            GasCostWithTimestamp entry = new GasCostWithTimestamp(gasCost, timestamp);
+            gasCostsInEthWithTimestamp.add(entry);
+        }
+
+        return gasCostsInEthWithTimestamp;
+    }
+
+
 }
 
 class GasCostSummary {
@@ -89,5 +115,31 @@ class GasCostSummary {
     public void setTransactionCount(int transactionCount) {
         this.transactionCount = transactionCount;
     }
-
 }
+
+class GasCostWithTimestamp {
+    private BigDecimal gasCost;
+    private String timestamp;
+
+    public GasCostWithTimestamp(BigDecimal gasCost, String timestamp) {
+        this.gasCost = gasCost;
+        this.timestamp = timestamp;
+    }
+
+    public BigDecimal getGasCost() {
+        return gasCost;
+    }
+
+    public void setGasCost(BigDecimal gasCost) {
+        this.gasCost = gasCost;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+}
+
