@@ -1,7 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.domain.GasCostSummary;
 import com.example.demo.service.EtherscanService;
-import com.example.demo.etherscan.GasCostSummary;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

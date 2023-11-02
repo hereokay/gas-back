@@ -16,6 +16,12 @@ public class EthereumPrice {
     public EthereumPrice() {
     }
 
+    public EthereumPrice(String id, Long date, String price) {
+        this.id = id;
+        this.date = date;
+        this.price = price;
+    }
+
     public EthereumPrice(Long date, String price) {
         this.date = date;
         this.price = price;

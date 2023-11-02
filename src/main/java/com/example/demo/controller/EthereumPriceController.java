@@ -24,5 +24,4 @@ public class EthereumPriceController {
         return ethereumPriceService.getAllPrices();
     }
 
-    // 기타 필요한 엔드포인트 구현
 }

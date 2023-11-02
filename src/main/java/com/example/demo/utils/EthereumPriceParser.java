@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class EthereumPriceParser {
 
     public static List<EthereumPrice> parse(String filePath) throws Exception {
@@ -23,9 +24,10 @@ public class EthereumPriceParser {
             JSONArray priceEntry = pricesArray.getJSONArray(i);
             EthereumPrice ethereumPrice = new EthereumPrice();
             ethereumPrice.setDate(priceEntry.getLong(0));
-            ethereumPrice.setPrice(priceEntry.getString(1));
+            ethereumPrice.setPrice(Double.toString(priceEntry.getDouble(1))); // double 값을 String으로 변환하여 저장합니다.
             prices.add(ethereumPrice);
         }
+
 
         return prices;
     }
