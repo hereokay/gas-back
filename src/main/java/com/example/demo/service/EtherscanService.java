@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.domain.GasCostSummary;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,57 +90,5 @@ public class EtherscanService {
     }
 
 
-}
-
-class GasCostSummary {
-    private BigDecimal totalCostInEth;
-    private int transactionCount;
-
-    public GasCostSummary(BigDecimal totalCostInEth, int transactionCount) {
-        this.totalCostInEth = totalCostInEth;
-        this.transactionCount = transactionCount;
-    }
-
-    public BigDecimal getTotalCostInEth() {
-        return totalCostInEth;
-    }
-
-    public void setTotalCostInEth(BigDecimal totalCostInEth) {
-        this.totalCostInEth = totalCostInEth;
-    }
-
-    public int getTransactionCount() {
-        return transactionCount;
-    }
-
-    public void setTransactionCount(int transactionCount) {
-        this.transactionCount = transactionCount;
-    }
-}
-
-class GasCostWithTimestamp {
-    private BigDecimal gasCost;
-    private String timestamp;
-
-    public GasCostWithTimestamp(BigDecimal gasCost, String timestamp) {
-        this.gasCost = gasCost;
-        this.timestamp = timestamp;
-    }
-
-    public BigDecimal getGasCost() {
-        return gasCost;
-    }
-
-    public void setGasCost(BigDecimal gasCost) {
-        this.gasCost = gasCost;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
 }
 
