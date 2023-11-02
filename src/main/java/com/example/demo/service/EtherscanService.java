@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.GasCostSummary;
+import com.example.demo.domain.GasCostWithTimestamp;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.domain;
 
 import java.math.BigDecimal;
 

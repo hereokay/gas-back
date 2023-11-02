@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.service.EtherscanService;
 import com.example.demo.domain.GasCostSummary;
-import com.example.demo.service.GasCostWithTimestamp;
+import com.example.demo.domain.GasCostWithTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
