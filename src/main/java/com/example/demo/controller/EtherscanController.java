@@ -32,7 +32,7 @@ public class EtherscanController {
     public ResponseEntity<GasCostSummary> getGasCostSummary(@RequestParam String address) {
         return ResponseEntity.ok(etherscanService.getGasCostSummary(address));
     }
-    @GetMapping("/user-with-transactions")
+    @GetMapping("/user")
     public ResponseEntity<User> getUserWithTransactions(@RequestParam String address) {
         User user = etherscanService.getUserWithTransactions(address);
         return ResponseEntity.ok(user);
