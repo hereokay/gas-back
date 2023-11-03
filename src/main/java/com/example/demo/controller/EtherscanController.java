@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.User;
 import com.example.demo.service.EtherscanService;
 import com.example.demo.domain.GasCostSummary;
-import com.example.demo.domain.GasCostWithTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +32,10 @@ public class EtherscanController {
     public ResponseEntity<GasCostSummary> getGasCostSummary(@RequestParam String address) {
         return ResponseEntity.ok(etherscanService.getGasCostSummary(address));
     }
-    @GetMapping("/gas-costs-in-eth-with-timestamp")
-    public ResponseEntity<List<GasCostWithTimestamp>> getGasCostsInEthWithTimestamp(@RequestParam String address) {
-        return ResponseEntity.ok(etherscanService.getGasCostsInEthWithTimestamp(address));
+    @GetMapping("/user-with-transactions")
+    public ResponseEntity<User> getUserWithTransactions(@RequestParam String address) {
+        User user = etherscanService.getUserWithTransactions(address);
+        return ResponseEntity.ok(user);
     }
+
 }

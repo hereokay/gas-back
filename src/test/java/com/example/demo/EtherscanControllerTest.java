@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.domain.GasCostSummary;
+import com.example.demo.domain.User;
 import com.example.demo.service.EtherscanService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,4 +64,27 @@ public class EtherscanControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedGasCosts)));
     }
+
+
+
+    @Test
+    public void testPrintUserWithTransactions() {
+        // 주소 설정
+        String address = "0xe63a7377D863861F0bCC16dF9cb7C8F9A9Ab6d47";
+
+        // User 객체 생성 및 초기화 (필요에 따라 자세한 데이터로 채워 넣으세요)
+        User mockUser = new User();
+        mockUser.setAddress(address);
+        // ... mockUser를 초기화하는 코드 (트랜잭션 리스트 등)
+
+        // 목 서비스가 특정 메서드를 호출할 때 mockUser를 반환하도록 설정
+        when(etherscanService.getUserWithTransactions(address)).thenReturn(mockUser);
+
+        // 서비스 메서드를 호출하여 User 객체를 가져옵니다.
+        User user = etherscanService.getUserWithTransactions(address);
+
+        // 결과를 출력합니다.
+        System.out.println(user.getTransactions());
+    }
+
 }

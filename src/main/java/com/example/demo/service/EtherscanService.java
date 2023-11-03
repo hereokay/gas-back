@@ -1,7 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.GasCostSummary;
-import com.example.demo.domain.GasCostWithTimestamp;
+import com.example.demo.domain.Transaction;
+import com.example.demo.domain.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,30 +67,71 @@ public class EtherscanService {
         return new GasCostSummary(totalCost, count);
     }
 
-    public List<GasCostWithTimestamp> getGasCostsInEthWithTimestamp(String address) {
-        ResponseEntity<String> response = getTransactionHistory(address);
-        JSONObject jsonResponse = new JSONObject(response.getBody());
+    public User getUserWithTransactions(String address) {
+        JSONObject jsonResponse = getJsonResponseFromEtherscan(address);
         JSONArray transactions = jsonResponse.getJSONArray("result");
 
-        List<GasCostWithTimestamp> gasCostsInEthWithTimestamp = new ArrayList<>();
+        User user = new User();
+        user.setAddress(address);
+
+        List<Transaction> transactionList = buildTransactionList(transactions, user);
+
+        BigDecimal totalGasCost = transactionList.stream()
+                .map(Transaction::getGasCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        user.setGasCost(totalGasCost);
+        user.setTransactions(transactionList);
+
+        return user;
+    }
+
+    private JSONObject getJsonResponseFromEtherscan(String address) {
+        ResponseEntity<String> response = getTransactionHistory(address);
+        return new JSONObject(response.getBody());
+    }
+
+    private List<Transaction> buildTransactionList(JSONArray transactions, User user) {
+        List<Transaction> transactionList = new ArrayList<>();
 
         for (int i = 0; i < transactions.length(); i++) {
-            JSONObject transaction = transactions.getJSONObject(i);
-            BigInteger gasPrice = new BigInteger(transaction.getString("gasPrice"));
-            BigInteger gasUsed = new BigInteger(transaction.getString("gasUsed"));
+            JSONObject transactionJson = transactions.getJSONObject(i);
+
+            // 필요한 트랜잭션 데이터를 추출합니다.
+            BigInteger gasPrice = new BigInteger(transactionJson.getString("gasPrice"));
+            BigInteger gasUsed = new BigInteger(transactionJson.getString("gasUsed"));
             BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
             BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
 
-            // 트랜잭션의 timestamp 정보를 가져옵니다.
-            String timestamp = transaction.getString("timeStamp");
+            // 트랜잭션 객체를 생성하고 필드를 설정합니다.
+            Transaction transaction = new Transaction();
+            transaction.setGasCost(gasCost);
+            transaction.setTimestamp(transactionJson.getString("timeStamp"));
 
-            GasCostWithTimestamp entry = new GasCostWithTimestamp(gasCost, timestamp);
-            gasCostsInEthWithTimestamp.add(entry);
+            // 여기서 Transaction 객체의 address와 id를 설정합니다.
+            transaction.setSender(user.getAddress()); // 사용자 주소로 설정
+            transaction.setId(transactionJson.getString("hash")); // 고유한 트랜잭션 해시를 ID로 사용
+
+            transactionList.add(transaction);
         }
 
-        return gasCostsInEthWithTimestamp;
+        return transactionList;
     }
 
+
+    private Transaction createTransactionFromJson(JSONObject transactionJson) {
+        BigInteger gasPrice = new BigInteger(transactionJson.getString("gasPrice"));
+        BigInteger gasUsed = new BigInteger(transactionJson.getString("gasUsed"));
+        BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
+        BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
+        String timestamp = transactionJson.getString("timeStamp");
+
+        Transaction transaction = new Transaction();
+        transaction.setGasCost(gasCost);
+        transaction.setTimestamp(timestamp);
+
+        return transaction;
+    }
 
 }
 
