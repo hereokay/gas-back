@@ -106,7 +106,7 @@ public class EtherscanService {
             // 트랜잭션 객체를 생성하고 필드를 설정합니다.
             Transaction transaction = new Transaction();
             transaction.setGasCost(gasCost);
-            transaction.setTimestamp(transactionJson.getString("timeStamp"));
+            transaction.setTimeStamp(transactionJson.getLong("timeStamp"));
 
             // 여기서 Transaction 객체의 address와 id를 설정합니다.
             transaction.setSender(user.getAddress()); // 사용자 주소로 설정
@@ -124,11 +124,11 @@ public class EtherscanService {
         BigInteger gasUsed = new BigInteger(transactionJson.getString("gasUsed"));
         BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
         BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
-        String timestamp = transactionJson.getString("timeStamp");
+        Long timestamp = Long.parseLong(transactionJson.getString("timeStamp"));
 
         Transaction transaction = new Transaction();
         transaction.setGasCost(gasCost);
-        transaction.setTimestamp(timestamp);
+        transaction.setTimeStamp(timestamp);
 
         return transaction;
     }

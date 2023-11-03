@@ -15,10 +15,19 @@ public class User {
 
     private Long ranking;
     private BigDecimal gasCost;
+    private BigDecimal spendGasUSDT;
     private String address;
 
     @DBRef
     private List<Transaction> transactions;
+
+    public BigDecimal getSpendGasUSDT() {
+        return spendGasUSDT;
+    }
+
+    public void setSpendGasUSDT(BigDecimal spendGasUSDT) {
+        this.spendGasUSDT = spendGasUSDT;
+    }
 
     public String getId() {
         return id;

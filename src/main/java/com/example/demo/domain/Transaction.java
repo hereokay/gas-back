@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +14,10 @@ public class Transaction {
     private String id;
 
     private BigDecimal gasCost;
-    private String timestamp;
+
+    @Indexed
+    private Long timeStamp;
+
     private String sender;
 
     public String getId() {
@@ -32,12 +36,12 @@ public class Transaction {
         this.gasCost = gasCost;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public Long getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getSender() {
