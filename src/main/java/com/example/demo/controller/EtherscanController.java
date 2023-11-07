@@ -37,5 +37,10 @@ public class EtherscanController {
         User user = etherscanService.getUserWithTransactions(address);
         return ResponseEntity.ok(user);
     }
+    @GetMapping("/onlyGasUSDT")
+    public BigDecimal getOnlyGasUSDT(@RequestParam String address) {
+        User user = etherscanService.getUserWithTransactions(address);
+        return user != null ? user.getSpendGasUSDT() : BigDecimal.ZERO;
+    }
 
 }
