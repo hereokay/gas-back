@@ -10,7 +10,7 @@ import java.util.Date;
 public class EthereumPrice {
     @Id
     private String id;
-    private Long date;
+    private Long timeStamp;
     private String price;
 
     public EthereumPrice() {
@@ -18,12 +18,12 @@ public class EthereumPrice {
 
     public EthereumPrice(String id, Long date, String price) {
         this.id = id;
-        this.date = date;
+        this.timeStamp = date;
         this.price = price;
     }
 
     public EthereumPrice(Long date, String price) {
-        this.date = date;
+        this.timeStamp = date;
         this.price = price;
     }
 
@@ -36,11 +36,11 @@ public class EthereumPrice {
     }
 
     public Long getDate() {
-        return date;
+        return timeStamp;
     }
 
     public void setDate(Long date) {
-        this.date = date;
+        this.timeStamp = date;
     }
 
     public String getPrice() {

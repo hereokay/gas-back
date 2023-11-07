@@ -3,8 +3,10 @@ package com.example.demo.service;
 import com.example.demo.domain.GasCostSummary;
 import com.example.demo.domain.Transaction;
 import com.example.demo.domain.User;
+import com.example.demo.utils.TransactionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class EtherscanService {
     @Value("${etherscan.api.key}")
     private String API_KEY ;
     private static final BigInteger WEI_IN_ETH = BigInteger.TEN.pow(18);
+
+    @Autowired
+    private EthereumPriceService ethereumPriceService;
 
     public List<BigDecimal> getGasCostsInEth(String address) {
         ResponseEntity<String> response = getTransactionHistory(address);
@@ -76,6 +81,27 @@ public class EtherscanService {
 
         List<Transaction> transactionList = buildTransactionList(transactions, user);
 
+        // USDT의 총 사용량을 계산하기 위한 변수
+        BigDecimal totalSpendGasUSDT = BigDecimal.ZERO;
+
+        // 각 트랜잭션에 대해 반복
+        for (Transaction transaction : transactionList) {
+            // 트랜잭션의 타임스탬프를 자정 시간으로 변환
+            Long midnightTimestamp = TransactionUtils.toMidnightTimeStamp(transaction.getTimeStamp());
+
+            // 해당 시간에 맞는 이더리움 가격 조회
+            BigDecimal ethPriceAtMidnight = ethereumPriceService.getPriceAtTime(midnightTimestamp);
+
+            // 이더리움 가격과 gasCost 곱하기
+            BigDecimal spendUSDT = transaction.getGasCost().multiply(ethPriceAtMidnight);
+
+            // 총 USDT 사용량에 추가
+            totalSpendGasUSDT = totalSpendGasUSDT.add(spendUSDT);
+        }
+
+        // 사용자의 총 USDT 사용량 설정
+        user.setSpendGasUSDT(totalSpendGasUSDT);
+
         BigDecimal totalGasCost = transactionList.stream()
                 .map(Transaction::getGasCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -106,7 +132,11 @@ public class EtherscanService {
             // 트랜잭션 객체를 생성하고 필드를 설정합니다.
             Transaction transaction = new Transaction();
             transaction.setGasCost(gasCost);
-            transaction.setTimeStamp(transactionJson.getLong("timeStamp"));
+
+            // 기존의 타임스탬프 값을 가져와 1000을 곱한다.
+            Long timeStampInSeconds = transactionJson.getLong("timeStamp");
+            Long timeStampInMilliseconds = timeStampInSeconds * 1000;
+            transaction.setTimeStamp(timeStampInMilliseconds);
 
             // 여기서 Transaction 객체의 address와 id를 설정합니다.
             transaction.setSender(user.getAddress()); // 사용자 주소로 설정
