@@ -23,5 +23,4 @@ public class EthereumPriceController {
     public List<EthereumPrice> getAllPrices() {
         return ethereumPriceService.getAllPrices();
     }
-
 }
