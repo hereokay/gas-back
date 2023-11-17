@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.GasCostSummary;
 import com.example.demo.domain.Transaction;
 import com.example.demo.domain.User;
 import com.example.demo.utils.TransactionUtils;
@@ -63,13 +62,6 @@ public class EtherscanService {
                 .queryParam("apikey", API_KEY);
 
         return restTemplate.getForEntity(builder.toUriString(), String.class);
-    }
-
-    public GasCostSummary getGasCostSummary(String address) {
-        List<BigDecimal> gasCostsInEth = getGasCostsInEth(address);
-        BigDecimal totalCost = gasCostsInEth.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        int count = gasCostsInEth.size();
-        return new GasCostSummary(totalCost, count);
     }
 
     public User getUserWithTransactions(String address) {
@@ -146,21 +138,6 @@ public class EtherscanService {
         }
 
         return transactionList;
-    }
-
-
-    private Transaction createTransactionFromJson(JSONObject transactionJson) {
-        BigInteger gasPrice = new BigInteger(transactionJson.getString("gasPrice"));
-        BigInteger gasUsed = new BigInteger(transactionJson.getString("gasUsed"));
-        BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
-        BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
-        Long timestamp = Long.parseLong(transactionJson.getString("timeStamp"));
-
-        Transaction transaction = new Transaction();
-        transaction.setGasCost(gasCost);
-        transaction.setTimeStamp(timestamp);
-
-        return transaction;
     }
 
 }
