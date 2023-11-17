@@ -5,5 +5,4 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EthereumPriceRepository extends MongoRepository<EthereumPrice, String> {
     EthereumPrice findFirstByTimeStampLessThanEqualOrderByTimeStampDesc(Long timeStamp);
-
 }

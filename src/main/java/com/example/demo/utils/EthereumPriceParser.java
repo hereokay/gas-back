@@ -3,8 +3,6 @@ package com.example.demo.utils;
 import com.example.demo.domain.EthereumPrice;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import java.util.List;
 
 
 public class EthereumPriceParser {
-
     public static List<EthereumPrice> parse(String filePath) throws Exception {
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
         JSONObject jsonObject = new JSONObject(content);
@@ -27,7 +24,6 @@ public class EthereumPriceParser {
             ethereumPrice.setPrice(Double.toString(priceEntry.getDouble(1))); // double 값을 String으로 변환하여 저장합니다.
             prices.add(ethereumPrice);
         }
-
 
         return prices;
     }

@@ -24,42 +24,19 @@ public class EtherscanService {
     private static final String ETHERSCAN_API_URL = "https://api.etherscan.io/api";
 
     @Value("${etherscan.api.key}")
-    private String API_KEY ;
+    private String API_KEY;
     private static final BigInteger WEI_IN_ETH = BigInteger.TEN.pow(18);
 
     @Autowired
     private EthereumPriceService ethereumPriceService;
 
-    public List<BigDecimal> getGasCostsInEth(String address) {
-        ResponseEntity<String> response = getTransactionHistory(address);
-        JSONObject jsonResponse = new JSONObject(response.getBody());
-        JSONArray transactions = jsonResponse.getJSONArray("result");
+    @Autowired
+    private UserService userService;
 
-        List<BigDecimal> gasCostsInEth = new ArrayList<>();
-
-        for (int i = 0; i < transactions.length(); i++) {
-            JSONObject transaction = transactions.getJSONObject(i);
-            BigInteger gasPrice = new BigInteger(transaction.getString("gasPrice"));
-            BigInteger gasUsed = new BigInteger(transaction.getString("gasUsed"));
-            BigDecimal gasCostInWei = new BigDecimal(gasPrice.multiply(gasUsed));
-            BigDecimal gasCost = gasCostInWei.divide(new BigDecimal(WEI_IN_ETH), 8, RoundingMode.HALF_UP);
-            gasCostsInEth.add(gasCost);
-        }
-
-        return gasCostsInEth;
-    }
-
-    public ResponseEntity<String> getTransactionHistory(String address) {
+    private ResponseEntity<String> getTransactionHistory(String address) {
         RestTemplate restTemplate = new RestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ETHERSCAN_API_URL)
-                .queryParam("module", "account")
-                .queryParam("action", "txlist")
-                .queryParam("address", address)
-                .queryParam("startblock", 0)
-                .queryParam("endblock", 99999999)
-                .queryParam("sort", "asc")
-                .queryParam("apikey", API_KEY);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ETHERSCAN_API_URL).queryParam("module", "account").queryParam("action", "txlist").queryParam("address", address).queryParam("startblock", 0).queryParam("endblock", 99999999).queryParam("sort", "asc").queryParam("apikey", API_KEY);
 
         return restTemplate.getForEntity(builder.toUriString(), String.class);
     }
@@ -94,12 +71,12 @@ public class EtherscanService {
         // 사용자의 총 USDT 사용량 설정
         user.setSpendGasUSDT(totalSpendGasUSDT);
 
-        BigDecimal totalGasCost = transactionList.stream()
-                .map(Transaction::getGasCost)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalGasCost = transactionList.stream().map(Transaction::getGasCost).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         user.setGasCost(totalGasCost);
         user.setTransactions(transactionList);
+
+        userService.saveUser(user);
 
         return user;
     }
