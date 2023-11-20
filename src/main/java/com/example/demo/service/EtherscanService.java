@@ -42,43 +42,45 @@ public class EtherscanService {
     }
 
     public User getUserWithTransactions(String address) {
-        JSONObject jsonResponse = getJsonResponseFromEtherscan(address);
-        JSONArray transactions = jsonResponse.getJSONArray("result");
+        User user = initializeUser(address);
+        List<Transaction> transactionList = buildTransactionList(getTransactionsFromEtherscan(address), user);
+        calculateTransactionStatistics(user, transactionList);
+        userService.saveUser(user);
+        return user;
+    }
 
+    private JSONArray getTransactionsFromEtherscan(String address) {
+        JSONObject jsonResponse = getJsonResponseFromEtherscan(address);
+        return jsonResponse.getJSONArray("result");
+    }
+
+    private User initializeUser(String address) {
         User user = new User();
         user.setAddress(address);
-
-        List<Transaction> transactionList = buildTransactionList(transactions, user);
-
-        // USDT의 총 사용량을 계산하기 위한 변수
-        BigDecimal totalSpendGasUSDT = BigDecimal.ZERO;
-
-        // 각 트랜잭션에 대해 반복
-        for (Transaction transaction : transactionList) {
-            // 트랜잭션의 타임스탬프를 자정 시간으로 변환
-            Long midnightTimestamp = TransactionUtils.toMidnightTimeStamp(transaction.getTimeStamp());
-
-            // 해당 시간에 맞는 이더리움 가격 조회
-            BigDecimal ethPriceAtMidnight = ethereumPriceService.getPriceAtTime(midnightTimestamp);
-
-            // 이더리움 가격과 gasCost 곱하기
-            BigDecimal spendUSDT = transaction.getGasCost().multiply(ethPriceAtMidnight);
-
-            // 총 USDT 사용량에 추가
-            totalSpendGasUSDT = totalSpendGasUSDT.add(spendUSDT);
-        }
-
-        // 사용자의 총 USDT 사용량 설정
-        user.setSpendGasUSDT(totalSpendGasUSDT);
-
-        BigDecimal totalGasCost = transactionList.stream().map(Transaction::getGasCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        user.setGasCost(totalGasCost);
-        user.setTransactions(transactionList);
-
-        userService.saveUser(user);
-
         return user;
+    }
+
+    private void calculateTransactionStatistics(User user, List<Transaction> transactionList) {
+        BigDecimal totalSpendGasUSDT = calculateTotalSpendGasUSDT(transactionList);
+        user.setSpendGasUSDT(totalSpendGasUSDT);
+        user.setGasCost(calculateTotalGasCost(transactionList));
+        user.setTransactions(transactionList);
+    }
+
+    private BigDecimal calculateTotalSpendGasUSDT(List<Transaction> transactionList) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Transaction transaction : transactionList) {
+            BigDecimal ethPriceAtMidnight = ethereumPriceService.getPriceAtTime(
+                    TransactionUtils.toMidnightTimeStamp(transaction.getTimeStamp()));
+            total = total.add(transaction.getGasCost().multiply(ethPriceAtMidnight));
+        }
+        return total;
+    }
+
+    private BigDecimal calculateTotalGasCost(List<Transaction> transactionList) {
+        return transactionList.stream()
+                .map(Transaction::getGasCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private JSONObject getJsonResponseFromEtherscan(String address) {
@@ -116,6 +118,5 @@ public class EtherscanService {
 
         return transactionList;
     }
-
 }
 
