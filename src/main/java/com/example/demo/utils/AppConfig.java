@@ -1,11 +1,13 @@
 package com.example.demo.utils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
+@EnableAspectJAutoProxy
 public class AppConfig {
 
     @Bean
