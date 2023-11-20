@@ -45,6 +45,11 @@ public class EtherscanService {
         User user = initializeUser(address);
         List<Transaction> transactionList = buildTransactionList(getTransactionsFromEtherscan(address), user);
         calculateTransactionStatistics(user, transactionList);
+
+//         순위 계산 후 할당
+        int ranking = userService.calculateRanking(user.getSpendGasUSDT());
+        user.setRanking((long) ranking);
+
         userService.saveUser(user);
         return user;
     }
