@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PerformanceLoggingAspect {
 
-    @Around("execution(* com.example.demo.service.EtherscanService.getUserWithTransactions(..))")
+    @Around("execution(* com.example.demo.service.EtherscanService.fetchAndStoreUserFromExternalAPI(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object proceed = joinPoint.proceed(); // 메소드 실행

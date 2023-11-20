@@ -41,7 +41,7 @@ public class EtherscanService {
         return restTemplate.getForEntity(builder.toUriString(), String.class);
     }
 
-    public User getUserWithTransactions(String address) {
+    public User fetchAndStoreUserFromExternalAPI(String address) {
         User user = initializeUser(address);
         List<Transaction> transactionList = buildTransactionList(getTransactionsFromEtherscan(address), user);
         calculateTransactionStatistics(user, transactionList);

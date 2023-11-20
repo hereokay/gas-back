@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getUserWithTransactions(@RequestParam String address) {
-        User user = etherscanService.getUserWithTransactions(address);
+        User user = etherscanService.fetchAndStoreUserFromExternalAPI(address);
         return ResponseEntity.ok(user);
     }
 }
