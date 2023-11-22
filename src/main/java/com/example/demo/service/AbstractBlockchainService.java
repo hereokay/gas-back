@@ -28,7 +28,11 @@ public abstract class AbstractBlockchainService {
 
     public User fetchAndStoreUserFromExternalAPI(String address) {
         User user = new User(address);
-        List<Transaction> transactionList = buildTransactionList(getTransactionsFromExternalAPI(address), user);
+        ResponseEntity<String> response = getTransactionHistory(address);
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+        JSONArray jsonTransactions = jsonResponse.getJSONArray("result");
+
+        List<Transaction> transactionList = buildTransactionList(jsonTransactions, user);
         calculateTransactionStatistics(user, transactionList);
 
 //         순위 계산 후 할당
@@ -39,40 +43,8 @@ public abstract class AbstractBlockchainService {
         return user;
     }
 
-    protected JSONArray getTransactionsFromExternalAPI(String address) {
-        JSONObject jsonResponse = getJsonResponseFromExternalAPI(address);
-        return jsonResponse.getJSONArray("result");
-    }
-
-    protected void calculateTransactionStatistics(User user, List<Transaction> transactionList) {
-        BigDecimal totalSpendGasUSDT = calculateTotalSpendGasUSDT(transactionList);
-        user.setSpendGasUSDT(totalSpendGasUSDT);
-        user.setGasCost(calculateTotalGasCost(transactionList));
-        user.setTransactions(transactionList);
-    }
-
-    protected BigDecimal calculateTotalSpendGasUSDT(List<Transaction> transactionList) {
-        BigDecimal total = BigDecimal.ZERO;
-        for (Transaction transaction : transactionList) {
-            BigDecimal ethPriceAtMidnight = ethereumPriceService.getPriceAtTime(
-                    TransactionUtils.toMidnightTimeStamp(transaction.getTimeStamp()));
-            total = total.add(transaction.getGasCost().multiply(ethPriceAtMidnight));
-        }
-        return total;
-    }
-
-    protected BigDecimal calculateTotalGasCost(List<Transaction> transactionList) {
-        return transactionList.stream()
-                .map(Transaction::getGasCost)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     protected abstract ResponseEntity<String> getTransactionHistory(String address) ;
 
-    protected JSONObject getJsonResponseFromExternalAPI(String address) {
-        ResponseEntity<String> response = getTransactionHistory(address);
-        return new JSONObject(response.getBody());
-    }
 
     protected List<Transaction> buildTransactionList(JSONArray transactions, User user) {
         List<Transaction> transactionList = new ArrayList<>();
@@ -103,5 +75,30 @@ public abstract class AbstractBlockchainService {
         }
 
         return transactionList;
+    }
+
+
+    // calculate
+    protected void calculateTransactionStatistics(User user, List<Transaction> transactionList) {
+        BigDecimal totalSpendGasUSDT = calculateTotalSpendGasUSDT(transactionList);
+        user.setSpendGasUSDT(totalSpendGasUSDT);
+        user.setGasCost(calculateTotalGasCost(transactionList));
+        user.setTransactions(transactionList);
+    }
+
+    protected BigDecimal calculateTotalSpendGasUSDT(List<Transaction> transactionList) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Transaction transaction : transactionList) {
+            BigDecimal ethPriceAtMidnight = ethereumPriceService.getPriceAtTime(
+                    TransactionUtils.toMidnightTimeStamp(transaction.getTimeStamp()));
+            total = total.add(transaction.getGasCost().multiply(ethPriceAtMidnight));
+        }
+        return total;
+    }
+
+    protected BigDecimal calculateTotalGasCost(List<Transaction> transactionList) {
+        return transactionList.stream()
+                .map(Transaction::getGasCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
