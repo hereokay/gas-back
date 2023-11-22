@@ -21,6 +21,13 @@ public class User {
     @DBRef
     private List<Transaction> transactions;
 
+    public User() {
+    }
+
+    public User(String address) {
+        this.address = address;
+    }
+
     public BigDecimal getSpendGasUSDT() {
         return spendGasUSDT;
     }
