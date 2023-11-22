@@ -35,12 +35,12 @@ public class EthereumPrice {
         this.id = id;
     }
 
-    public Long getDate() {
+    public Long getTimeStamp() {
         return timeStamp;
     }
 
-    public void setDate(Long date) {
-        this.timeStamp = date;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getPrice() {

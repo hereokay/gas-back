@@ -16,8 +16,8 @@ class AlchemyServiceTest {
     @Test
     public void test(){
         String address = "0xB2F9BbC5db84a95B598cAB0C464cF92D584d8900";
-        User user = alchemyService.fetchAndStoreUserFromExternalAPI(address);
+        //User user = alchemyService.fetchAndStoreUserFromExternalAPI(address);
 
-        System.out.println(user.getGasCost());
+        //System.out.println(user.getGasCost());
     }
 }

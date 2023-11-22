@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getUserWithTransactions(@RequestParam String address) {
-        User user = alchemyService.fetchAndStoreUserFromExternalAPI(address);
+        User user = etherscanService.fetchAndStoreUserFromExternalAPI(address);
         return ResponseEntity.ok(user);
     }
 }

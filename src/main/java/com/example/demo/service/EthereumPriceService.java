@@ -25,7 +25,7 @@ public class EthereumPriceService {
     }
 
     public void saveEthereumPricesFromFile(String filePath) throws Exception {
-        List<EthereumPrice> prices = EthereumPriceParser.parse(filePath);
+        List<EthereumPrice> prices = EthereumPriceParser.parseWithCsv(filePath);
         ethereumPriceRepository.saveAll(prices);
     }
 
