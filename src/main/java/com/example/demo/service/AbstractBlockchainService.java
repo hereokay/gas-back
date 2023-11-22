@@ -18,9 +18,6 @@ import java.util.List;
 
 public abstract class AbstractBlockchainService {
 
-    @Autowired
-    protected RestTemplate restTemplate;
-
     private static final BigInteger WEI_IN_ETH = BigInteger.TEN.pow(18);
 
     @Autowired
