@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,7 +17,11 @@ public class User {
     private Long ranking;
     private BigDecimal gasCost;
     private BigDecimal spendGasUSDT;
+
+    @Indexed
     private String address;
+
+
 
     @DBRef
     private List<Transaction> transactions;
