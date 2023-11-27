@@ -28,15 +28,4 @@ public class UserService {
         return userRepository.findByAddress(address);
     }
 
-    public int calculateRanking(BigDecimal spendGasUSDT) {
-        // 모든 사용자를 spendGasUSDT에 따라 정렬하고, 주어진 spendGasUSDT의 순위를 찾습니다.
-        // 이 부분은 데이터베이스의 집계 쿼리로 구현될 수 있습니다.
-        List<User> allUsers = userRepository.findAllByOrderBySpendGasUSDTDesc();
-        for (int i = 0; i < allUsers.size(); i++) {
-            if (allUsers.get(i).getSpendGasUSDT().compareTo(spendGasUSDT) <= 0) {
-                return i + 1; // 순위는 1부터 시작
-            }
-        }
-        return allUsers.size() + 1;
-    }
 }
