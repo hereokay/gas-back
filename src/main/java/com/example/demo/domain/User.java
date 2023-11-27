@@ -21,11 +21,6 @@ public class User {
     @Indexed
     private String address;
 
-
-
-    @DBRef
-    private List<Transaction> transactions;
-
     public User() {
     }
 
@@ -73,12 +68,5 @@ public class User {
         this.address = address;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
 }
 

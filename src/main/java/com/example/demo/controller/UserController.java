@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.User;
-import com.example.demo.service.EtherscanService;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.AddressUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private EtherscanService etherscanService;
+    private UserService etherscanService;
 
     @Autowired
     private UserService userService;
