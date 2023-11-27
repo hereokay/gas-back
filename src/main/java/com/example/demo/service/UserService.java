@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,6 +23,9 @@ public class UserService {
 
         // 신규 유저
         return userRepository.save(user);
+    }
+    public Optional<User> getByAddress(String address){
+        return userRepository.findByAddress(address);
     }
 
     public int calculateRanking(BigDecimal spendGasUSDT) {

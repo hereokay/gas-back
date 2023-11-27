@@ -34,6 +34,7 @@ public class EtherscanService  {
     @Autowired
     private UserService userService;
 
+
     public User fetchAndStoreUserFromExternalAPI(String address) {
         User user = new User(address);
         ResponseEntity<String> response = getTransactionHistory(address);
