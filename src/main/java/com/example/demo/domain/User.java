@@ -17,6 +17,7 @@ public class User {
     private Long ranking;
     private BigDecimal gasCost;
     private BigDecimal spendGasUSDT;
+    private String lastUpdate; //YYYY-MM-DD
 
     @Indexed
     private String address;

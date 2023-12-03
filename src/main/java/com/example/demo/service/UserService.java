@@ -23,8 +23,12 @@ public class UserService {
         // 신규 유저
         return userRepository.save(user);
     }
+
     public Optional<User> getByAddress(String address){
         return userRepository.findByAddress(address);
     }
 
+    public Optional<User> updateUserAddress(String address){
+        return Optional.of(new User());
+    }
 }
