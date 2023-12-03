@@ -14,10 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/")
 public class UserController {
-
-    @Autowired
-    private UserService etherscanService;
-
+    
     @Autowired
     private UserService userService;
 
