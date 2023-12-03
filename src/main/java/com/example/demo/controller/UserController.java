@@ -19,8 +19,9 @@ public class UserController {
     @GetMapping("/user")
     public Optional<User> getUser(@RequestParam String address) {
         String lowerAddress = AddressUtils.convertHexToLowerCase(address);
-        return userService.getByAddress(lowerAddress);
+        return userService.getById(lowerAddress);
     }
+
     @PostMapping("/user/update")
     public ResponseEntity<Optional<User>> updateUser(@RequestBody String address) {
         // Assuming the address is the unique identifier for the user.

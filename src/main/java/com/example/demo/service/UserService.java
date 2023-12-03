@@ -13,19 +13,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User saveUser(User user){
-
-        // 이미 존재하는 경우
-        if (userRepository.findByAddress(user.getAddress()).isPresent()){
-            return null;
-        }
-
-        // 신규 유저
-        return userRepository.save(user);
-    }
-
-    public Optional<User> getByAddress(String address){
-        return userRepository.findByAddress(address);
+    public Optional<User> getById(String address){
+        return userRepository.findById(address);
     }
 
     public Optional<User> updateUserAddress(String address){

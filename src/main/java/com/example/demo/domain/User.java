@@ -8,25 +8,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @Document(collection = "users")
 public class User {
 
     @Id
     private String id;
+    private BigDecimal spendGasUSDT;
 
     private Long ranking;
     private BigDecimal gasCost;
-    private BigDecimal spendGasUSDT;
     private String lastUpdate; //YYYY-MM-DD
 
-    @Indexed
-    private String address;
 
     public User() {
     }
 
-    public User(String address) {
-        this.address = address;
+    public User(String id) {
+        this.id = id;
     }
 
     public BigDecimal getSpendGasUSDT() {
@@ -37,13 +36,6 @@ public class User {
         this.spendGasUSDT = spendGasUSDT;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getRanking() {
         return ranking;
@@ -61,13 +53,20 @@ public class User {
         this.gasCost = gasCost;
     }
 
-    public String getAddress() {
-        return address;
+    public String getId() {
+        return id;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setId(String id) {
+        this.id = id;
     }
 
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }
 

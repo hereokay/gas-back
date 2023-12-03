@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends MongoRepository<User,String> {
-    Optional<User> findByAddress(String address);
+    Optional<User> findById(String address);
     List<User> findAllByOrderBySpendGasUSDTDesc();
+
 }
