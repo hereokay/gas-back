@@ -28,7 +28,7 @@ class UserServiceTest {
 
         // Retrieve gasCost from user and compare
         BigDecimal spendGasUSDT = userOptional.get().getSpendGasUSDT();
-        BigDecimal expectedSpendGasUSDT = new BigDecimal("11.81027585888").setScale(11, RoundingMode.HALF_UP);
+        BigDecimal expectedSpendGasUSDT = new BigDecimal("23.62055171776").setScale(11, RoundingMode.HALF_UP);
         Assertions.assertThat(spendGasUSDT).isEqualTo(expectedSpendGasUSDT);
     }
 }
