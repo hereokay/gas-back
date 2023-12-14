@@ -7,6 +7,8 @@ DEMO:
 
 ### 프로젝트 소개
 
+[데모](http://43.200.32.96:3000/)
+
 특정 주소가 사용한 이더리움 Transaction 수수료를 조회하는 서비스입니다.
 
 - [프론트 서버](https://github.com/hereokay/gas-front)
