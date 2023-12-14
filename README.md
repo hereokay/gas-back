@@ -26,5 +26,4 @@ DevOps : AWS EC2, AWS Lambda
 
 ### Architecture
 
-![image](https://github.com/hereokay/gas-back/assets/79696571/9d600be4-a3de-48b4-a16a-0f6ece2e914d)
-
+<img width="70%" src="https://github.com/hereokay/gas-back/assets/79696571/9d600be4-a3de-48b4-a16a-0f6ece2e914d"/>
